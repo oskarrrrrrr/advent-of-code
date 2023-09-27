@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"os"
 	"strconv"
@@ -18,8 +17,8 @@ type Password struct {
 	constraint Constraint
 }
 
-func newPasswordFromInput(text string) Password {
-	fields := strings.Fields(text)
+func ParsePassword(s string) Password {
+	fields := strings.Fields(s)
 	if len(fields) != 3 {
 		panic("Unexpected input!")
 	}
@@ -34,6 +33,16 @@ func newPasswordFromInput(text string) Password {
 			upper:  upper,
 		},
 	}
+}
+
+func ReadInput() []Password {
+	inputBytes, _ := os.ReadFile("input.txt")
+	input := strings.TrimSpace(string(inputBytes))
+	var passwords []Password
+	for _, line := range strings.Split(input, "\n") {
+		passwords = append(passwords, ParsePassword(line))
+	}
+	return passwords
 }
 
 func (p Password) validate1() bool {
@@ -53,13 +62,7 @@ func (p Password) validate2() bool {
 }
 
 func main() {
-	file, _ := os.Open("input.txt")
-	defer file.Close()
-	var passwords []Password
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		passwords = append(passwords, newPasswordFromInput(scanner.Text()))
-	}
+	passwords := ReadInput()
 	valid1, valid2 := 0, 0
 	for _, p := range passwords {
 		if p.validate1() {
@@ -69,6 +72,6 @@ func main() {
 			valid2++
 		}
 	}
-	fmt.Printf("[1] valid passwords: %v\n", valid1)
-	fmt.Printf("[2] valid passwords: %v\n", valid2)
+	fmt.Println("[1]", valid1)
+	fmt.Println("[2]", valid2)
 }

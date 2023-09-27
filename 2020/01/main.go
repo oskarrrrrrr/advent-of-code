@@ -1,15 +1,14 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"log"
 	"os"
 	"sort"
 	"strconv"
+	"strings"
 )
 
-func twoSum(nums []int, target int) (int, int, bool) {
+func TwoSum(nums []int, target int) (int, int, bool) {
 	l, r := 0, len(nums)-1
 	for l < r {
 		s := nums[l] + nums[r]
@@ -24,9 +23,9 @@ func twoSum(nums []int, target int) (int, int, bool) {
 	return 0, 0, true
 }
 
-func threeSum(nums []int, target int) (int, int, int, bool) {
+func ThreeSum(nums []int, target int) (int, int, int, bool) {
 	for i := 0; i < len(nums)-2; i++ {
-		a, b, err := twoSum(nums[i+1:], target-nums[i])
+		a, b, err := TwoSum(nums[i+1:], target-nums[i])
 		if !err {
 			return nums[i], a, b, false
 		}
@@ -34,24 +33,22 @@ func threeSum(nums []int, target int) (int, int, int, bool) {
 	return 0, 0, 0, true
 }
 
-func main() {
-	file, _ := os.Open("input.txt")
-	defer file.Close()
+func ReadInput() []int {
+	inputBytes, _ := os.ReadFile("input.txt")
+	input := strings.TrimSpace(string(inputBytes))
 	var nums []int
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		n, _ := strconv.Atoi(scanner.Text())
+	for _, numStr := range strings.Split(input, "\n") {
+		n, _ := strconv.Atoi(numStr)
 		nums = append(nums, n)
 	}
+	return nums
+}
+
+func main() {
+	nums := ReadInput()
 	sort.Ints(nums[:])
-	a, b, err := twoSum(nums, 2020)
-	if err {
-		log.Fatal("Couldn't find two sum!")
-	}
-	fmt.Printf("[two sum] a: %d, b: %d, result: %d\n", a, b, a*b)
-	a, b, c, err := threeSum(nums, 2020)
-	if err {
-		log.Fatal("Couldn't find three sum!")
-	}
-	fmt.Printf("[three sum] a: %d, b: %d, c: %d, result: %d\n", a, b, c, a*b*c)
+	a, b, _ := TwoSum(nums, 2020)
+	fmt.Println("[1]", a*b)
+	a, b, c, _ := ThreeSum(nums, 2020)
+	fmt.Println("[2]", a*b*c)
 }

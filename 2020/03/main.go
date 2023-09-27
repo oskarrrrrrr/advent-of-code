@@ -1,9 +1,9 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"os"
+	"strings"
 )
 
 type Trees []string
@@ -26,19 +26,21 @@ func (t Trees) CountTreesOnSlope(right, down int) int {
 	return tcount
 }
 
-func main() {
-	file, _ := os.Open("input.txt")
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
+func ReadInput() Trees {
+	inputBytes, _ := os.ReadFile("input.txt")
+	input := strings.TrimSpace(string(inputBytes))
 	var trees Trees
-	for scanner.Scan() {
-		trees = append(trees, scanner.Text())
+	for _, line := range strings.Split(input, "\n") {
+		trees = append(trees, line)
 	}
+	return trees
+}
 
-	tcount := trees.CountTreesOnSlope(3, 1)
-	fmt.Println("[1] trees on path: ", tcount)
+func Part1(trees Trees) int {
+	return trees.CountTreesOnSlope(3, 1)
+}
 
+func Part2(trees Trees) int {
 	slopes := [][2]int{
 		{1, 1},
 		{3, 1},
@@ -50,5 +52,11 @@ func main() {
 	for _, slope := range slopes {
 		mult *= trees.CountTreesOnSlope(slope[0], slope[1])
 	}
-	fmt.Println("[2] mult result: ", mult)
+	return mult
+}
+
+func main() {
+	trees := ReadInput()
+	fmt.Println("[1]", Part1(trees))
+	fmt.Println("[2]", Part2(trees))
 }
