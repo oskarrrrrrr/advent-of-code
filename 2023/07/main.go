@@ -283,5 +283,5 @@ func Part2(games []Game) int {
 func main() {
 	games := GetInput()
 	fmt.Println("part 1:", Part1(games), "(expected 250453939)")
-	fmt.Println("part 2:", Part2(games), "(expected ?)")
+	fmt.Println("part 2:", Part2(games), "(expected 248652697)")
 }
