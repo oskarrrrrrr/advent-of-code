@@ -125,6 +125,7 @@ part2 :: proc(_map: Map) -> int {
     pos := _map.start
     dir := Direction.UP
     obstacles := map[Pos]Empty{}
+    defer delete(obstacles)
     for {
         next_pos := pos_move(pos, dir)
         pos_is_valid(_map, next_pos) or_break
